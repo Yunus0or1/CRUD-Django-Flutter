@@ -1,5 +1,7 @@
+import 'package:crud_flutter/src/pages/home_page.dart';
+import 'package:crud_flutter/src/pages/no_internet_page.dart';
+import 'package:crud_flutter/src/pages/splash_page.dart';
 import 'package:flutter/material.dart';
-
 
 typedef RouterMethod = PageRoute Function(RouteSettings, Map<String, String>);
 
@@ -24,51 +26,11 @@ final Map<String, RouterMethod> _definitions = {
       },
     );
   },
-  '/initial_tutorial_page': (settings, _) {
-    return MaterialPageRoute(
-      settings: settings,
-      builder: (context) {
-        return InitialTutorialScrollingPage();
-      },
-    );
-  },
-  '/login': (settings, _) {
-    return MaterialPageRoute(
-      settings: settings,
-      builder: (context) {
-        return LoginPage();
-      },
-    );
-  },
   '/main': (settings, params) {
     return MaterialPageRoute(
       settings: settings,
       builder: (context) {
-        return MainPage();
-      },
-    );
-  },
-  '/verification_page': (settings, _) {
-    return MaterialPageRoute(
-      settings: settings,
-      builder: (context) {
-        return VerificationPage();
-      },
-    );
-  },
-  '/consult_pharmacist': (settings, _) {
-    return MaterialPageRoute(
-      settings: settings,
-      builder: (context) {
-        return ConsultPharmacistPage();
-      },
-    );
-  },
-  '/refer_a_friend': (settings, _) {
-    return MaterialPageRoute(
-      settings: settings,
-      builder: (context) {
-        return ReferralLinkPage();
+        return HomePage();
       },
     );
   },

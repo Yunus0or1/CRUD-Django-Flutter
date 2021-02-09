@@ -5,6 +5,7 @@ import 'package:crud_flutter/src/models/feed/feed_response.dart';
 import 'package:crud_flutter/src/models/general/App_Enum.dart';
 import 'package:crud_flutter/src/models/general/Enum_Data.dart';
 import 'package:crud_flutter/src/models/user/user.dart';
+import 'package:crud_flutter/src/store/store.dart';
 
 import 'package:tuple/tuple.dart';
 import 'dart:convert';
