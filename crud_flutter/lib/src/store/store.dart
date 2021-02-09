@@ -1,9 +1,6 @@
 import 'dart:convert';
-import 'package:pharmacy_app/src/models/general/Enum_Data.dart';
-import 'package:pharmacy_app/src/models/order/deliver_address_details.dart';
-import 'package:pharmacy_app/src/models/states/app_state.dart';
-import 'package:pharmacy_app/src/models/states/app_vary_states.dart';
-import 'package:pharmacy_app/src/models/user/user.dart';
+import 'package:crud_flutter/src/models/states/app_state.dart';
+import 'package:crud_flutter/src/models/user/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Store {
@@ -52,45 +49,9 @@ class Store {
     putAppData();
   }
 
-  setDeliveryAddress(DeliveryAddressDetails deliveryAddressDetails) async {
-    appState.allDeliveryAddress.add(deliveryAddressDetails);
-    putAppData();
-  }
 
-  deleteDeliveryAddress(DeliveryAddressDetails deliveryAddressDetails) async {
-    appState.allDeliveryAddress.remove(deliveryAddressDetails);
-    putAppData();
-  }
 
-  setFirebasePushNotificationToken(String firebasePushNotificationToken) async {
-    appState.firebasePushNotificationToken = firebasePushNotificationToken;
-    await putAppData();
-  }
 
-  setReferralCode(String referralCode) async {
-    // Even if a user does not login first time, referral code will exist until
-    // he login with that referral code
-    appState.referralCode = referralCode;
-    await putAppData();
-  }
-
-  setDynamicReferralLink(String deepLink)async {
-    appState.user.dynamicReferralLink = deepLink;
-    await putAppData();
-  }
-
-  getFirebasePushNotificationToken() {
-    return appState.firebasePushNotificationToken;
-  }
-
-  Future updateLanguage({String languageOption}) async {
-    if (languageOption == ClientEnum.LANGUAGE_ENGLISH) {
-      appState.language = ClientEnum.LANGUAGE_BANGLA;
-    } else if (languageOption == ClientEnum.LANGUAGE_BANGLA) {
-      appState.language = ClientEnum.LANGUAGE_ENGLISH;
-    }
-    await putAppData();
-  }
 
   Future updateUser(User user) async {
     appState.user = user;

@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'package:pharmacy_app/src/models/states/event.dart';
+
+import 'package:crud_flutter/src/models/states/event.dart';
 
 class Streamer {
   static StreamController<Event> _streamControllerEvent =

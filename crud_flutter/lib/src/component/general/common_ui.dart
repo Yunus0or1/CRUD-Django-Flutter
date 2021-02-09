@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pharmacy_app/src/util/en_bn_dict.dart';
 
 Widget commonDivider({double height}) {
   return Container(
@@ -9,23 +8,6 @@ Widget commonDivider({double height}) {
   );
 }
 
-Widget CustomText(String title,
-    {double fontSize,
-    TextOverflow overflow,
-    FontWeight fontWeight,
-    Color color,
-    TextAlign textAlign}) {
-  return Text(
-    EnBnDict.en_bn_convert(text: title),
-    overflow: overflow ?? TextOverflow.fade,
-    textAlign: textAlign ?? TextAlign.center,
-    style: TextStyle(
-        fontFamily: EnBnDict.en_bn_font(),
-        fontWeight: fontWeight ?? FontWeight.normal,
-        fontSize: fontSize ?? 14.5,
-        color: color ?? Colors.black),
-  );
-}
 
 Widget noItemView(dynamic refreshCallback) {
   return RefreshIndicator(

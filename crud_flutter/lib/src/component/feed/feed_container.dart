@@ -1,21 +1,18 @@
 import 'dart:async';
+import 'package:crud_flutter/src/bloc/stream.dart';
+import 'package:crud_flutter/src/component/general/common_ui.dart';
+import 'package:crud_flutter/src/models/feed/feed_info.dart';
+import 'package:crud_flutter/src/models/feed/feed_item.dart';
+import 'package:crud_flutter/src/models/feed/feed_request.dart';
+import 'package:crud_flutter/src/models/feed/feed_response.dart';
+import 'package:crud_flutter/src/models/general/Enum_Data.dart';
+import 'package:crud_flutter/src/models/states/event.dart';
+import 'package:crud_flutter/src/models/states/ui_state.dart';
+import 'package:crud_flutter/src/repo/user_repo.dart';
+import 'package:crud_flutter/src/util/util.dart';
 import 'package:flutter/material.dart';
-import 'package:pharmacy_app/src/bloc/stream.dart';
-import 'package:pharmacy_app/src/models/feed/feed_item.dart';
-import 'package:pharmacy_app/src/models/feed/feed_request.dart';
-import 'package:pharmacy_app/src/models/feed/feed_response.dart';
-import 'package:pharmacy_app/src/component/general/common_ui.dart';
-import 'package:pharmacy_app/src/models/feed/feed_info.dart';
-import 'package:pharmacy_app/src/models/general/Enum_Data.dart';
-import 'package:pharmacy_app/src/models/general/Order_Enum.dart';
-import 'package:pharmacy_app/src/models/states/app_vary_states.dart';
-import 'package:pharmacy_app/src/models/states/event.dart';
-import 'package:pharmacy_app/src/models/states/ui_state.dart';
-import 'package:pharmacy_app/src/repo/query_repo.dart';
-import 'package:pharmacy_app/src/util/util.dart';
 import 'package:tuple/tuple.dart';
 import 'feed_card_handler.dart';
-import 'package:pharmacy_app/src/store/store.dart';
 
 class FeedContainer extends StatefulWidget {
   final FeedInfo feedInfo;
@@ -93,8 +90,6 @@ class _FeedContainerState extends State<FeedContainer>
       setState(() {
         feedItemsPermData.clear();
         feedItems.clear();
-        AppVariableStates.instance.orderFilterStatus =
-            OrderEnum.ORDER_STATUS_ALL;
       });
   }
 
@@ -103,7 +98,7 @@ class _FeedContainerState extends State<FeedContainer>
     String responseCode;
 
     Tuple2<FeedResponse, String> response =
-        await QueryRepo.instance.getFeed(feedRequest);
+        await UserRepo.instance.getFeed(feedRequest);
     responseCode = response.item2;
 
     if (responseCode == ClientEnum.RESPONSE_SUCCESS) {
@@ -123,31 +118,9 @@ class _FeedContainerState extends State<FeedContainer>
     isProcessing = false;
 
     if (mounted) setState(() {});
-
-    // This is only added just to show Tutorial box on order Card. When length == 0 then no tutorial box
-    if (feedRequest.feedInfo.feedType == OrderEnum.FEED_ORDER ||
-        feedRequest.feedInfo.feedType == OrderEnum.FEED_REPEAT_ORDER ||
-        feedRequest.feedInfo.feedType == OrderEnum.FEED_REQUEST_ORDER) {
-      Streamer.putTotalOrderStream(feedResponse.feedItems.length);
-    }
-
-    if (feedRequest.feedInfo.feedType == OrderEnum.FEED_REQUEST_ORDER) {
-      noItem = false;
-    }
   }
 
   void addItems(List<FeedItem> items, FeedRequest feedRequest) {
-    if (items.length > 0 &&
-        feedRequest.feedInfo.feedType == OrderEnum.FEED_ORDER) {
-      feedItems
-          .add(FeedItem(viewCardType: OrderEnum.FEED_ITEM_ORDER_FILTER_CARD));
-    }
-
-    if (feedRequest.feedInfo.feedType == OrderEnum.FEED_REQUEST_ORDER) {
-      feedItems.add(FeedItem(
-          viewCardType: OrderEnum.FEED_ITEM_REQUEST_ORDER_PAGE_BUTTON_CARD));
-    }
-
     feedItems.addAll(items);
 
     feedItemsPermData = feedItems.sublist(0, feedItems.length);

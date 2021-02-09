@@ -1,12 +1,7 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:pharmacy_app/src/models/states/app_vary_states.dart';
-import 'package:pharmacy_app/src/repo/auth_repo.dart';
-import 'package:pharmacy_app/src/services/dynamic_link_service.dart';
-import 'package:pharmacy_app/src/store/store.dart';
-import 'package:pharmacy_app/src/services/notification_service.dart';
+import 'package:crud_flutter/router.dart';
+import 'package:crud_flutter/src/store/store.dart';
+import 'package:crud_flutter/src/util/util.dart';
 import 'package:flutter/material.dart';
-import 'src/router.dart';
-import 'package:pharmacy_app/src/util/util.dart';
 
 class App extends StatefulWidget {
   @override
@@ -26,10 +21,7 @@ class _AppSate extends State<App> {
   }
 
   void initProject() async {
-    AppVariableStates.instance.navigatorKey = navigatorKey;
     await Store.initStore();
-    await firebaseCloudMessagingListeners();
-    await DynamicLinksApi.instance.handleReferralLink();
   }
 
   @override

@@ -1,7 +1,8 @@
 import 'dart:convert';
 
-import 'package:pharmacy_app/src/models/states/app_vary_states.dart';
-import 'package:pharmacy_app/src/store/store.dart';
+import 'package:crud_flutter/src/models/states/app_vary_states.dart';
+import 'package:crud_flutter/src/store/store.dart';
+
 
 class User {
   int id;

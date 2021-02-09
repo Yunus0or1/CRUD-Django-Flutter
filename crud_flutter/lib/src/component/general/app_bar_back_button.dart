@@ -1,5 +1,3 @@
-import 'package:pharmacy_app/src/bloc/stream.dart';
-import 'package:pharmacy_app/src/models/states/event.dart';
 import 'package:flutter/material.dart';
 
 class AppBarBackButton extends StatelessWidget {
