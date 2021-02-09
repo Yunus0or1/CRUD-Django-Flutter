@@ -1,7 +1,7 @@
 import 'package:crud_flutter/src/component/general/loading_widget.dart';
 import 'package:crud_flutter/src/util/util.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:crud_flutter/src/models/user/user.dart';
 
 class AddEditUserPage extends StatefulWidget {
   final User user;
@@ -38,6 +38,15 @@ class AddEditUserPageState extends State<AddEditUserPage> {
     return GestureDetector(
       onTap: () => Util.removeFocusNode(context),
       child: Scaffold(
+        appBar: AppBar(
+          elevation: 1,
+          centerTitle: true,
+          title: Text(
+            'USER FORM',
+            style: TextStyle(
+                color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),
+          ),
+        ),
         key: _scaffoldKey,
         body: SafeArea(
             child: SingleChildScrollView(
@@ -109,9 +118,7 @@ class AddEditUserPageState extends State<AddEditUserPage> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
-        children: <Widget>[
-          SizedBox(height: 20),
-        ],
+        children: children,
       ),
     );
   }

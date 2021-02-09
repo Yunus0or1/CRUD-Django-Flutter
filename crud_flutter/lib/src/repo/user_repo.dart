@@ -21,44 +21,13 @@ class UserRepo {
 
   static UserRepo get instance => _instance;
 
-  Future<Tuple2<User, String>> signIn(
-      {String phoneNumber, String authToken}) async {
-    int retry = 0;
-
-    while (retry++ < 2) {
-      try {
-        String signInRequest = jsonEncode(<String, dynamic>{
-          'AUTH_TOKEN': authToken,
-          'PHONE_NUMBER': phoneNumber,
-          'SIGNIN_TYPE': ClientEnum.SIGNIN_PHONE
-        });
-
-        final signInResponse =
-            await UserRepo.instance.getAuthClient().signIn(signInRequest);
-
-        if (signInResponse['STATUS'] == true) {
-          final user = User.fromJson(json.decode(signInResponse['USER']));
-
-          return Tuple2(user, ClientEnum.RESPONSE_SUCCESS);
-        }
-        if (signInResponse['STATUS'] == false) {
-          return Tuple2(null, signInResponse['RESPONSE_MESSAGE']);
-        }
-      } catch (err) {
-        print("Error in signIn() in AuthRepo");
-        print(err);
-      }
-    }
-    return Tuple2(null, ClientEnum.RESPONSE_CONNECTION_ERROR);
-  }
-
   Future<Tuple2<FeedResponse, String>> getUserListFeedData(
       FeedRequest feedRequest) async {
     int retry = 0;
     while (retry++ < 2) {
       try {
-        final String jwtToken = Store.instance.appState.user.token;
-        final int userId = Store.instance.appState.user.id;
+        final String jwtToken = Store.instance.appState.jwtToken;
+        final String userId = Store.instance.appState.userUUID;
 
         final feedResponse = await UserRepo.instance
             .getAuthClient()
@@ -81,7 +50,7 @@ class UserRepo {
 
         return Tuple2(orderFeedResponse, ClientEnum.RESPONSE_SUCCESS);
       } catch (err) {
-        print("Error in getOrderFeedData() in QueryRepo");
+        print("Error in getUserListFeedData() in QueryRepo");
         print(err);
       }
     }

@@ -34,6 +34,7 @@ class GeneralActionRoundButton extends StatelessWidget {
         onPressed: () => (isProcessing == false) ? callBackOnSubmit() : () {},
         child: Text(
           title,
+          style: TextStyle(color: textColor),
         ),
         color: getButtonColor(),
       ),

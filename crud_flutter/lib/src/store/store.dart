@@ -44,17 +44,10 @@ class Store {
     _appState = new AppState();
   }
 
-  setPhoneNumber(String phoneNumber) {
-    appState.user.phone = phoneNumber;
-    putAppData();
-  }
 
 
-
-
-
-  Future updateUser(User user) async {
-    appState.user = user;
+  Future updateUserId(String userUUID) async {
+    appState.userUUID = userUUID;
     await putAppData();
   }
 

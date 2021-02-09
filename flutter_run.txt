@@ -1,2 +1,2 @@
-cd D:\Arbree\pharmacy-app\pharmacy_app
+cd D:\CRUD-Django-Flutter\crud_flutter
 flutter run

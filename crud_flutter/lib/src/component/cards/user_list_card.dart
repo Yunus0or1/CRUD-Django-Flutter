@@ -1,8 +1,9 @@
+import 'package:crud_flutter/src/component/general/common_ui.dart';
 import 'package:crud_flutter/src/models/user/user.dart';
+import 'package:crud_flutter/src/pages/add_edit_user_page.dart';
 import 'package:crud_flutter/src/util/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 
 class UserListCard extends StatelessWidget {
   final User user;
@@ -32,12 +33,12 @@ class UserListCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        buildTitle(),
+        buildTitle(context),
       ],
     );
   }
 
-  Widget buildTitle() {
+  Widget buildTitle(BuildContext context) {
     return GestureDetector(
       child: Container(
         height: 90,
@@ -47,12 +48,23 @@ class UserListCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              width: 30,
-              child: Icon(
-                Icons.shopping_bag,
-                color: Util.greenishColor(),
-                size: 28,
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AddEditUserPage(
+                            user: user,
+                          )),
+                );
+              },
+              child: Container(
+                width: 30,
+                child: Icon(
+                  Icons.edit,
+                  color: Util.greenishColor(),
+                  size: 28,
+                ),
               ),
             ),
             SizedBox(width: 10),
@@ -61,23 +73,37 @@ class UserListCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(user.token,
+                  Text(user.firstName,
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold)),
                   SizedBox(height: 5),
-                  Text(user.token,
+                  Text(user.firstName,
                       style:
                           TextStyle(color: new Color.fromARGB(255, 4, 72, 71)))
                 ],
               ),
             ),
-            Container(
-              width: 30,
-              child: Icon(Icons.chevron_right, size: 28.0),
+            GestureDetector(
+              onTap: (){
+                showAlertDialog(
+                    context: context,
+                    height: 150,
+                    message:
+                    "Are you sure to remove this user?",
+                    acceptFunc: deleteUser);
+              },
+              child: Container(
+                width: 30,
+                child: Icon(Icons.delete, size: 28.0),
+              ),
             )
           ],
         ),
       ),
     );
+  }
+
+  void deleteUser(){
+
   }
 }

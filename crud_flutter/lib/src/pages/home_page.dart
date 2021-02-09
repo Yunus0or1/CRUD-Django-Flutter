@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:crud_flutter/src/component/buttons/general_action_round_button.dart';
+import 'package:crud_flutter/src/models/user/user.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -62,29 +64,41 @@ class _HomePageState extends State<HomePage> {
     return SingleChildScrollView(
       child: Container(
         alignment: Alignment.center,
-        child: Stack(
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-
-              ],
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            GeneralActionRoundButton(
+              title: "Add Parent User",
+              textColor: Colors.white,
+              isProcessing: false,
+              callBackOnSubmit: navigateToAddEditUserPage,
             ),
+            GeneralActionRoundButton(
+              title: "Add Child User",
+              textColor: Colors.white,
+              isProcessing: false,
+              callBackOnSubmit: navigateToAddEditUserPage,
+            ),
+            GeneralActionRoundButton(
+              title: "View User List",
+              textColor: Colors.white,
+              isProcessing: false,
+              callBackOnSubmit: navigateToAddEditUserPage,
+            )
           ],
         ),
       ),
     );
   }
 
-  navigateToUploadPrescriptionPage(List<Uint8List> prescriptionImageFileList) {
-    if (prescriptionImageFileList.length == 0) return;
+  navigateToAddEditUserPage() {
     Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => AddEditUserPage(
-
+                user: User(),
               )),
     );
   }

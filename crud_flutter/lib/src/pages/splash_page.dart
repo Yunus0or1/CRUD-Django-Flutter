@@ -57,7 +57,7 @@ class SplashPageState extends State<SplashPage> {
       height: 100,
       width: 180,
       child: Image.asset(
-        'assets/images/amar_pharma_small.png',
+        'assets/images/logo.png',
         alignment: Alignment.center,
         fit: BoxFit.contain,
       ),

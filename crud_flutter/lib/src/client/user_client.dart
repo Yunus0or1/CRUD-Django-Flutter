@@ -26,7 +26,7 @@ class UserClient {
   }
 
   Future<dynamic> getUserListFeed(
-      String jwtToken,  int userId) async {
+      String jwtToken,  String userId) async {
     final http.Response response = await http.get(
       ServerConfig.SERVER_HOST +
           ServerConfig.SERVER_PORT.toString() +
