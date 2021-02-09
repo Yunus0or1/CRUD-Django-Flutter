@@ -5,6 +5,7 @@ class FeedItem {
   User user;
 
   FeedItem({
+    this.viewCardType,
     this.user,
   });
 }

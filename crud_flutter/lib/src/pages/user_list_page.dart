@@ -6,12 +6,12 @@ import 'package:crud_flutter/src/models/states/event.dart';
 import 'package:crud_flutter/src/models/states/ui_state.dart';
 import 'package:flutter/material.dart';
 
-class OrderPage extends StatefulWidget {
+class UserListPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => new _OrderPageState();
+  State<StatefulWidget> createState() => new _UserListPageState();
 }
 
-class _OrderPageState extends State<OrderPage> {
+class _UserListPageState extends State<UserListPage> {
   Key key = UniqueKey();
   GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 

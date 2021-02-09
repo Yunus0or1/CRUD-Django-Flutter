@@ -1,4 +1,5 @@
 import 'package:crud_flutter/src/component/general/common_ui.dart';
+import 'package:crud_flutter/src/models/general/App_Enum.dart';
 import 'package:crud_flutter/src/models/user/user.dart';
 import 'package:crud_flutter/src/pages/add_edit_user_page.dart';
 import 'package:crud_flutter/src/util/util.dart';
@@ -55,6 +56,7 @@ class UserListCard extends StatelessWidget {
                   MaterialPageRoute(
                       builder: (context) => AddEditUserPage(
                             user: user,
+                            userAdd: false,
                           )),
                 );
               },
@@ -84,12 +86,13 @@ class UserListCard extends StatelessWidget {
               ),
             ),
             GestureDetector(
-              onTap: (){
+              onTap: () {
                 showAlertDialog(
                     context: context,
                     height: 150,
-                    message:
-                    "Are you sure to remove this user?",
+                    message: (user.userType == AppEnum.USER_TYPE_PARENT)
+                        ? "Are you sure to remove this Parent? All children will be removed automatically."
+                        : "Are you sure to remove this child?",
                     acceptFunc: deleteUser);
               },
               child: Container(
@@ -103,7 +106,5 @@ class UserListCard extends StatelessWidget {
     );
   }
 
-  void deleteUser(){
-
-  }
+  void deleteUser() {}
 }

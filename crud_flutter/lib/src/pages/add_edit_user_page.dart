@@ -1,12 +1,14 @@
 import 'package:crud_flutter/src/component/general/loading_widget.dart';
+import 'package:crud_flutter/src/models/general/App_Enum.dart';
 import 'package:crud_flutter/src/util/util.dart';
 import 'package:flutter/material.dart';
 import 'package:crud_flutter/src/models/user/user.dart';
 
 class AddEditUserPage extends StatefulWidget {
   final User user;
+  final bool userAdd;
 
-  const AddEditUserPage({Key key, this.user}) : super(key: key);
+  const AddEditUserPage({Key key, this.user, this.userAdd}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => new AddEditUserPageState();
@@ -15,18 +17,29 @@ class AddEditUserPage extends StatefulWidget {
 class AddEditUserPageState extends State<AddEditUserPage> {
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  final firstNameController = new TextEditingController();
-  final lastNameController = new TextEditingController();
-  final streetNameController = new TextEditingController();
-  final cityNameController = new TextEditingController();
-  final stateNameController = new TextEditingController();
-  final zipNumberController = new TextEditingController();
+  TextEditingController firstNameController;
+  TextEditingController lastNameController;
+  TextEditingController streetNameController;
+  TextEditingController cityNameController;
+  TextEditingController stateNameController;
+  TextEditingController zipNumberController;
 
   bool isProcessing = false;
 
   @override
   void initState() {
     super.initState();
+    firstNameController =
+        new TextEditingController(text: widget.user.firstName);
+    lastNameController = new TextEditingController(text: widget.user.lastName);
+    streetNameController =
+        new TextEditingController(text: widget.user.addressDetails?.street);
+    cityNameController =
+        new TextEditingController(text: widget.user.addressDetails?.city);
+    stateNameController =
+        new TextEditingController(text: widget.user.addressDetails?.state);
+    zipNumberController =
+        new TextEditingController(text: widget.user.addressDetails?.zip);
   }
 
   void refreshUI() {
@@ -95,25 +108,27 @@ class AddEditUserPageState extends State<AddEditUserPage> {
         hintText: 'Mr. XYZ',
         textEditingController: lastNameController));
 
-    children.add(buildFormWidget(
-        textTitle: 'STREET NAME',
-        hintText: 'Road 1',
-        textEditingController: streetNameController));
+    if (widget.user.userType == AppEnum.USER_TYPE_PARENT) {
+      children.add(buildFormWidget(
+          textTitle: 'STREET NAME',
+          hintText: 'Road 1',
+          textEditingController: streetNameController));
 
-    children.add(buildFormWidget(
-        textTitle: 'CITY NAME',
-        hintText: 'Sylhet',
-        textEditingController: cityNameController));
+      children.add(buildFormWidget(
+          textTitle: 'CITY NAME',
+          hintText: 'Sylhet',
+          textEditingController: cityNameController));
 
-    children.add(buildFormWidget(
-        textTitle: 'STATE NAME',
-        hintText: 'New York City',
-        textEditingController: stateNameController));
+      children.add(buildFormWidget(
+          textTitle: 'STATE NAME',
+          hintText: 'New York City',
+          textEditingController: stateNameController));
 
-    children.add(buildFormWidget(
-        textTitle: 'ZIP NUMBER',
-        hintText: '3138',
-        textEditingController: zipNumberController));
+      children.add(buildFormWidget(
+          textTitle: 'ZIP NUMBER',
+          hintText: '3138',
+          textEditingController: zipNumberController));
+    }
 
     return Padding(
       padding: const EdgeInsets.all(8.0),

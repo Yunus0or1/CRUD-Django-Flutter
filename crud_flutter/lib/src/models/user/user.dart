@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:crud_flutter/src/models/user/address_details.dart';
 
 class User {
-  int id;
+  String id;
   String firstName;
   String lastName;
   String userType;

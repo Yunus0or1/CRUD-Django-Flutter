@@ -4,6 +4,7 @@ import 'package:crud_flutter/src/models/feed/feed_request.dart';
 import 'package:crud_flutter/src/models/feed/feed_response.dart';
 import 'package:crud_flutter/src/models/general/App_Enum.dart';
 import 'package:crud_flutter/src/models/general/Enum_Data.dart';
+import 'package:crud_flutter/src/models/user/address_details.dart';
 import 'package:crud_flutter/src/models/user/user.dart';
 import 'package:crud_flutter/src/store/store.dart';
 
@@ -58,6 +59,31 @@ class UserRepo {
   }
 
   Future<Tuple2<FeedResponse, String>> getFeed(FeedRequest feedRequest) async {
+    if (feedRequest.feedInfo.feedType == AppEnum.FEED_USER)
+      return Tuple2(
+          FeedResponse(status: true, feedItems: [
+            FeedItem(
+                viewCardType: AppEnum.USER_LIST_CARD,
+                user: User()
+                  ..id = '1'
+                  ..firstName = "Abc"
+                  ..lastName = "Xyz"
+                  ..userType = AppEnum.USER_TYPE_PARENT
+                  ..addressDetails = (AddressDetails()
+                    ..street = '1/A Harlington'
+                    ..city = "New York"
+                    ..state = "Ozone"
+                    ..zip = '3138Za')),
+            FeedItem(
+                viewCardType: AppEnum.USER_LIST_CARD,
+                user: User()
+                  ..id = '2'
+                  ..firstName = "Qwe"
+                  ..lastName = "Tyu"
+                  ..userType = AppEnum.USER_TYPE_CHILD
+                  ..addressDetails = null)
+          ]),
+          ClientEnum.RESPONSE_SUCCESS);
     if (feedRequest.feedInfo.feedType == AppEnum.FEED_USER)
       return getUserListFeedData(feedRequest);
 

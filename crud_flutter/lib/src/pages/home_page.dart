@@ -1,7 +1,9 @@
 import 'dart:typed_data';
 import 'package:crud_flutter/src/bloc/stream.dart';
+import 'package:crud_flutter/src/models/general/App_Enum.dart';
 import 'package:crud_flutter/src/models/states/event.dart';
 import 'package:crud_flutter/src/pages/add_edit_user_page.dart';
+import 'package:crud_flutter/src/pages/user_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -73,19 +75,19 @@ class _HomePageState extends State<HomePage> {
               title: "Add Parent User",
               textColor: Colors.white,
               isProcessing: false,
-              callBackOnSubmit: navigateToAddEditUserPage,
+              callBackOnSubmit: navigateToAddEditParentUser,
             ),
             GeneralActionRoundButton(
               title: "Add Child User",
               textColor: Colors.white,
               isProcessing: false,
-              callBackOnSubmit: navigateToAddEditUserPage,
+              callBackOnSubmit: navigateToAddEditChildUser,
             ),
             GeneralActionRoundButton(
               title: "View User List",
               textColor: Colors.white,
               isProcessing: false,
-              callBackOnSubmit: navigateToAddEditUserPage,
+              callBackOnSubmit: navigateToUserListPage,
             )
           ],
         ),
@@ -93,13 +95,32 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  navigateToAddEditUserPage() {
+  navigateToAddEditParentUser() {
     Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => AddEditUserPage(
-                user: User(),
+                user: User()..userType = AppEnum.USER_TYPE_PARENT,
+                userAdd: true,
               )),
+    );
+  }
+
+  navigateToAddEditChildUser() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => AddEditUserPage(
+                user: User()..userType = AppEnum.USER_TYPE_CHILD,
+                userAdd: true,
+              )),
+    );
+  }
+
+  navigateToUserListPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => UserListPage()),
     );
   }
 
