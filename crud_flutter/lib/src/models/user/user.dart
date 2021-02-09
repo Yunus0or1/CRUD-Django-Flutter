@@ -6,6 +6,7 @@ class User {
   String firstName;
   String lastName;
   String userType;
+  String childDependentId;
   AddressDetails addressDetails;
 
   User({
@@ -13,6 +14,7 @@ class User {
     this.firstName,
     this.lastName,
     this.userType,
+    this.childDependentId,
     this.addressDetails,
   });
 
@@ -22,6 +24,7 @@ class User {
         firstName: jsonData['name'],
         lastName: jsonData['email'],
         userType: jsonData['user_type'],
+        childDependentId: jsonData['child_dependent_id'],
         addressDetails: AddressDetails.fromJson(jsonData['address_details']));
   }
 
@@ -31,6 +34,7 @@ class User {
     data['name'] = firstName;
     data['email'] = lastName;
     data['user_type'] = userType;
+    data['child_dependent_id'] = childDependentId;
     data['address_details'] = addressDetails.toJsonEncodedString();
 
     return json.encode(data);

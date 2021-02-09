@@ -13,11 +13,11 @@ import 'dart:convert';
 
 class UserRepo {
   static final UserRepo _instance = UserRepo();
-  UserClient _authClient;
+  UserClient _userClient;
 
-  UserClient getAuthClient() {
-    if (_authClient == null) _authClient = new UserClient();
-    return _authClient;
+  UserClient getUserClient() {
+    if (_userClient == null) _userClient = new UserClient();
+    return _userClient;
   }
 
   static UserRepo get instance => _instance;
@@ -31,27 +31,50 @@ class UserRepo {
         final String userId = Store.instance.appState.userUUID;
 
         final feedResponse = await UserRepo.instance
-            .getAuthClient()
+            .getUserClient()
             .getUserListFeed(jwtToken, userId);
 
-        final List<User> allUserList = List<dynamic>.from(feedResponse
-                .map((singleRequestOrder) => User.fromJson(singleRequestOrder)))
+        final List<User> allUserList = List<dynamic>.from(
+                feedResponse.map((singleUser) => User.fromJson(singleUser)))
             .cast<User>();
 
-        final orderFeedResponse = FeedResponse()
+        final userFeedResponse = FeedResponse()
           ..status = true
           ..lastFeed = false
           ..feedItems = allUserList
-              .map((singleRequestOrder) => FeedItem()
-                ..user = singleRequestOrder
+              .map((singleUser) => FeedItem()
+                ..user = singleUser
                 ..viewCardType = AppEnum.FEED_USER)
               .toList()
           ..response = ClientEnum.RESPONSE_SUCCESS
           ..error = false;
 
-        return Tuple2(orderFeedResponse, ClientEnum.RESPONSE_SUCCESS);
+        return Tuple2(userFeedResponse, ClientEnum.RESPONSE_SUCCESS);
       } catch (err) {
-        print("Error in getUserListFeedData() in QueryRepo");
+        print("Error in getUserListFeedData() in UserRepo");
+        print(err);
+      }
+    }
+    return Tuple2(null, ClientEnum.RESPONSE_CONNECTION_ERROR);
+  }
+
+  Future<Tuple2<List<User>, String>> getParentList() async {
+    int retry = 0;
+    while (retry++ < 2) {
+      try {
+        final String jwtToken = Store.instance.appState.jwtToken;
+        final String userId = Store.instance.appState.userUUID;
+
+        final parentListResponse = await UserRepo.instance
+            .getUserClient()
+            .getParentList(jwtToken, userId);
+
+        final List<User> allUserList = List<dynamic>.from(parentListResponse
+            .map((singleUser) => User.fromJson(singleUser))).cast<User>();
+
+        return Tuple2(allUserList, ClientEnum.RESPONSE_SUCCESS);
+      } catch (err) {
+        print("Error in getParentList() in UserRepo");
         print(err);
       }
     }
