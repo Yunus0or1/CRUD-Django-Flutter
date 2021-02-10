@@ -143,3 +143,29 @@ def deleteUser(request):
             'STATUS': False,
             'RESPONSE_MESSAGE': ServerEnum.RESPONSE_DATABASE_CONNECTION_ERROR
         })
+
+
+@csrf_exempt
+def getParenUserList(request):
+    try:
+        requestBody = util.decodeJson(request.body)
+        insertByUserId = requestBody['INSERT_BY_USER_ID']
+
+        databaseResultUserListData = util.executesql(
+            query="SELECT * FROM USER_TABLE WHERE INSERT_BY_USER_ID = %s AND USER_ID = %s",
+            datatuple=[insertByUserId, ServerEnum.USER_PARENT])
+
+        userListData = User.toJsonStringListFromDatabase(databaseResultUserListData)
+        return JsonResponse({
+            'USER_LIST': userListData,
+            'STATUS': True,
+            'RESPONSE_MESSAGE': ServerEnum.RESPONSE_SUCCESS
+        })
+
+    except Exception as e:
+        print("ERROR IN getParenUserList() method in crud_code/views.py")
+        print(e)
+        return JsonResponse({
+            'STATUS': False,
+            'RESPONSE_MESSAGE': ServerEnum.RESPONSE_DATABASE_CONNECTION_ERROR
+        })
