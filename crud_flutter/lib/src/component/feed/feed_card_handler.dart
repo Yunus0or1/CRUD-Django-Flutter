@@ -4,7 +4,6 @@ import 'package:crud_flutter/src/models/feed/feed_item.dart';
 import 'package:crud_flutter/src/models/general/App_Enum.dart';
 import 'package:flutter/material.dart';
 
-
 class FeedCardHandler extends StatelessWidget {
   final FeedInfo feedInfo;
   final FeedItem feedItem;
@@ -23,10 +22,8 @@ class FeedCardHandler extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     if (feedItem.viewCardType == AppEnum.USER_LIST_CARD) {
-      return UserListCard(
-          user: feedItem.user, key: GlobalKey());
+      return UserListCard(user: feedItem.user, key: GlobalKey());
     }
 
     return Container();

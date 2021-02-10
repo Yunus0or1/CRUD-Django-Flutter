@@ -1,10 +1,16 @@
+import 'package:crud_flutter/src/bloc/stream.dart';
 import 'package:crud_flutter/src/component/general/common_ui.dart';
 import 'package:crud_flutter/src/models/general/App_Enum.dart';
+import 'package:crud_flutter/src/models/general/Enum_Data.dart';
+import 'package:crud_flutter/src/models/states/event.dart';
+import 'package:crud_flutter/src/models/states/ui_state.dart';
 import 'package:crud_flutter/src/models/user/user.dart';
 import 'package:crud_flutter/src/pages/add_edit_user_page.dart';
+import 'package:crud_flutter/src/repo/user_repo.dart';
 import 'package:crud_flutter/src/util/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tuple/tuple.dart';
 
 class UserListCard extends StatelessWidget {
   final User user;
@@ -106,5 +112,20 @@ class UserListCard extends StatelessWidget {
     );
   }
 
-  void deleteUser() {}
+  void deleteUser() async{
+    Tuple2<void, String> deleteUserResponse =
+        await UserRepo.instance.deleteUser(userId: user.userId);
+
+    final responseCode = deleteUserResponse.item2;
+
+    if (responseCode == ClientEnum.RESPONSE_SUCCESS) {
+      Util.showSnackBar(
+          scaffoldKey: UIState.instance.scaffoldKey, message: "Removed User successfully");
+      Streamer.putEventStream(Event(EventType.REFRESH_USER_LIST_PAGE));
+    } else {
+      Util.showSnackBar(
+          scaffoldKey: UIState.instance.scaffoldKey,
+          message: "Something went wrong. Please try again.");
+    }
+  }
 }

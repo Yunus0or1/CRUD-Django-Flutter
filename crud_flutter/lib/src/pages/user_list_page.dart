@@ -24,11 +24,12 @@ class _UserListPageState extends State<UserListPage> {
 
   void eventChecker() async {
     Streamer.getEventStream().listen((data) {
-      if (data.eventType == EventType.REFRESH_ORDER_PAGE ||
+      if (data.eventType == EventType.REFRESH_USER_LIST_PAGE ||
           data.eventType == EventType.REFRESH_ALL_PAGES) {
         refreshUI();
       }
     });
+
   }
 
   void refreshUI() {

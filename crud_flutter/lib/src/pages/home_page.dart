@@ -44,9 +44,6 @@ class _HomePageState extends State<HomePage> {
         refreshUI();
       }
 
-      if (data.eventType == EventType.CHANGE_LANGUAGE) {
-        refreshUI();
-      }
     });
   }
 
