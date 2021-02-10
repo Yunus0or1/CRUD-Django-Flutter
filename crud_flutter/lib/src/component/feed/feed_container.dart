@@ -101,8 +101,11 @@ class _FeedContainerState extends State<FeedContainer>
         await UserRepo.instance.getFeed(feedRequest);
     responseCode = response.item2;
 
+
+
     if (responseCode == ClientEnum.RESPONSE_SUCCESS) {
       feedResponse = response.item1;
+
       if (feedResponse.status) {
         addItems(feedResponse.feedItems, feedRequest);
       }
@@ -122,9 +125,6 @@ class _FeedContainerState extends State<FeedContainer>
 
   void addItems(List<FeedItem> items, FeedRequest feedRequest) {
     feedItems.addAll(items);
-
-    feedItemsPermData = feedItems.sublist(0, feedItems.length);
-
     if (mounted) setState(() {});
   }
 

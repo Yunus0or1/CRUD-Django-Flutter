@@ -19,8 +19,8 @@ class User:
     def toJsonStringListFromDatabase(databaseResult):
         userList = []
         for i in range(0, len(databaseResult)):
-            insertByUserId = databaseResult[i][1]
-            userId = databaseResult[i][0]
+            insertByUserId = databaseResult[i][0]
+            userId = databaseResult[i][1]
             firstName = databaseResult[i][2]
             lastName = databaseResult[i][3]
             childDependentId = databaseResult[i][4]

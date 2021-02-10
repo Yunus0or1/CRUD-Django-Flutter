@@ -34,7 +34,7 @@ class UserRepo {
         if (user.userType == AppEnum.USER_TYPE_CHILD) {
           addressDetails = null;
         } else {
-          addressDetails = user.addressDetails.toJsonEncodedString();
+          addressDetails = user.address.toJsonEncodedString();
         }
 
         final String addEditUserRequest = jsonEncode(<String, dynamic>{
@@ -110,13 +110,13 @@ class UserRepo {
             ..feedItems = allUserList
                 .map((singleUser) => FeedItem()
                   ..user = singleUser
-                  ..viewCardType = AppEnum.FEED_USER)
+                  ..viewCardType = AppEnum.USER_LIST_CARD)
                 .toList()
             ..response = ClientEnum.RESPONSE_SUCCESS
             ..error = false;
 
           return Tuple2(userFeedResponse, ClientEnum.RESPONSE_SUCCESS);
-        }else {
+        } else {
           return Tuple2(null, feedResponse['RESPONSE_MESSAGE']);
         }
       } catch (err) {
@@ -160,11 +160,11 @@ class UserRepo {
             FeedItem(
                 viewCardType: AppEnum.USER_LIST_CARD,
                 user: User()
-                  ..id = '1'
+                  ..userId = '1'
                   ..firstName = "Abc"
                   ..lastName = "Xyz"
                   ..userType = AppEnum.USER_TYPE_PARENT
-                  ..addressDetails = (AddressDetails()
+                  ..address = (AddressDetails()
                     ..street = '1/A Harlington'
                     ..city = "New York"
                     ..state = "Ozone"
@@ -172,11 +172,11 @@ class UserRepo {
             FeedItem(
                 viewCardType: AppEnum.USER_LIST_CARD,
                 user: User()
-                  ..id = '2'
+                  ..userId = '2'
                   ..firstName = "Qwe"
                   ..lastName = "Tyu"
                   ..userType = AppEnum.USER_TYPE_CHILD
-                  ..addressDetails = null)
+                  ..address = null)
           ]),
           ClientEnum.RESPONSE_SUCCESS);
 

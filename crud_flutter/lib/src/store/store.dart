@@ -46,8 +46,13 @@ class Store {
   }
 
   Future createUserUUID() async {
-    appState.userUUID =  Util.createUUID();
-    await putAppData();
+    if(appState.userUUID.isEmpty){
+      appState.userUUID =  Util.createUUID();
+      await putAppData();
+    }else {
+      print( appState.userUUID );
+    }
+
   }
 
   // ----------------------------------------------------------------------- //

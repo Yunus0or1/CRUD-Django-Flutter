@@ -2,40 +2,44 @@ import 'dart:convert';
 import 'package:crud_flutter/src/models/user/address_details.dart';
 
 class User {
-  String id;
+  String userId;
   String firstName;
   String lastName;
-  String userType;
   String childDependentId;
-  AddressDetails addressDetails;
+  AddressDetails address;
+  String userType;
 
   User({
-    this.id,
+    this.userId,
     this.firstName,
     this.lastName,
-    this.userType,
     this.childDependentId,
-    this.addressDetails,
+    this.address,
+    this.userType,
   });
 
   factory User.fromJson(Map<String, dynamic> jsonData) {
     return User(
-        id: jsonData['id'],
-        firstName: jsonData['name'],
-        lastName: jsonData['email'],
-        userType: jsonData['user_type'],
-        childDependentId: jsonData['child_dependent_id'],
-        addressDetails: AddressDetails.fromJson(jsonData['address_details']));
+      userId: jsonData['USER_ID'],
+      firstName: jsonData['FIRST_NAME'],
+      lastName: jsonData['LAST_NAME'],
+      childDependentId: jsonData['CHILD_DEPENDENT_ID'],
+      address: (jsonData['ADDRESS'] == null)
+          ? null
+          : AddressDetails.fromJson(jsonData['ADDRESS']),
+      userType: jsonData['USER_TYPE'],
+    );
   }
 
   String toJsonString() {
     final data = Map<String, dynamic>();
-    data['id'] = id;
-    data['name'] = firstName;
-    data['email'] = lastName;
-    data['user_type'] = userType;
-    data['child_dependent_id'] = childDependentId;
-    data['address_details'] = addressDetails.toJsonEncodedString();
+    data['USER_ID'] = userId;
+    data['FIRST_NAME'] = firstName;
+    data['LAST_NAME'] = lastName;
+    data['CHILD_DEPENDENT_ID'] = childDependentId;
+    data['ADDRESS'] =
+        (address == null) ? null : address.toJsonEncodedString();
+    data['USER_TYPE'] = userType;
 
     return json.encode(data);
   }

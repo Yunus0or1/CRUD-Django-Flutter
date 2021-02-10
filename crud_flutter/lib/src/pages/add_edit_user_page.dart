@@ -38,13 +38,13 @@ class AddEditUserPageState extends State<AddEditUserPage> {
         new TextEditingController(text: widget.user.firstName);
     lastNameController = new TextEditingController(text: widget.user.lastName);
     streetNameController =
-        new TextEditingController(text: widget.user.addressDetails?.street);
+        new TextEditingController(text: widget.user.address?.street);
     cityNameController =
-        new TextEditingController(text: widget.user.addressDetails?.city);
+        new TextEditingController(text: widget.user.address?.city);
     stateNameController =
-        new TextEditingController(text: widget.user.addressDetails?.state);
+        new TextEditingController(text: widget.user.address?.state);
     zipNumberController =
-        new TextEditingController(text: widget.user.addressDetails?.zip);
+        new TextEditingController(text: widget.user.address?.zip);
     selectedParentForChild = widget.parentUserList[0];
   }
 
