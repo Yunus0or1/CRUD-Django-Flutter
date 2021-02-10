@@ -8,6 +8,7 @@ from django.http import JsonResponse
 
 from general import util
 from general.constants import ServerEnum
+from models.user import User
 
 
 def database_commit(request):
@@ -20,6 +21,7 @@ def database_commit(request):
 def create_user_table():
     try:
         sqlQuery = "CREATE TABLE IF NOT EXISTS USER_TABLE (" \
+                   "INSERT_BY_USER_ID VARCHAR(250) NOT NULL," \
                    "USER_ID VARCHAR(250) NOT NULL," \
                    "FIRST_NAME VARCHAR(250)," \
                    "LAST_NAME VARCHAR(250)," \
@@ -50,6 +52,7 @@ def addEditUser(request):
     try:
         requestBody = util.decodeJson(request.body)
 
+        insertByUserId = requestBody['INSERT_BY_USER_ID']
         firstName = requestBody['FIRST_NAME']
         lastName = requestBody['LAST_NAME']
         childDependentId = requestBody['CHILD_DEPENDENT_ID']
@@ -60,10 +63,10 @@ def addEditUser(request):
         if method == ServerEnum.DATABASE_INSERT:
             userId = util.generateID(userType)
             util.executesql(query="INSERT INTO USER_TABLE "
-                                  "(USER_ID, FIRST_NAME, LAST_NAME, "
+                                  "(INSERT_BY_USER_ID, USER_ID, FIRST_NAME, LAST_NAME, "
                                   "CHILD_DEPENDENT_ID, ADDRESS, USER_TYPE, CREATED_TIME)"
-                                  "VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                            datatuple=[userId, firstName, lastName, childDependentId, address, userType,
+                                  "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+                            datatuple=[insertByUserId, userId, firstName, lastName, childDependentId, address, userType,
                                        int(time.time())])
 
         if method == ServerEnum.DATABASE_UPDATE:
@@ -92,6 +95,31 @@ def addEditUser(request):
 
 
 @csrf_exempt
+def getUserList(request):
+    try:
+        requestBody = util.decodeJson(request.body)
+        insertByUserId = requestBody['INSERT_BY_USER_ID']
+
+        databaseResultUserListData = util.executesql(
+            query="SELECT * FROM USER_TABLE WHERE INSERT_BY_USER_ID = %s", datatuple=[insertByUserId])
+
+        userListData = User.toJsonStringListFromDatabase(databaseResultUserListData)
+        return JsonResponse({
+            'USER_LIST': userListData,
+            'STATUS': True,
+            'RESPONSE_MESSAGE': ServerEnum.RESPONSE_SUCCESS
+        })
+
+    except Exception as e:
+        print("ERROR IN getUserList() method in crud_code/views.py")
+        print(e)
+        return JsonResponse({
+            'STATUS': False,
+            'RESPONSE_MESSAGE': ServerEnum.RESPONSE_DATABASE_CONNECTION_ERROR
+        })
+
+
+@csrf_exempt
 def deleteUser(request):
     try:
         requestBody = util.decodeJson(request.body)
@@ -100,7 +128,7 @@ def deleteUser(request):
 
         with transaction.atomic():
             cursor = util.getdbconection()
-            cursor.execute("DELETE FROM USER_TABLE WHERE USER_ID =%s",[userId])
+            cursor.execute("DELETE FROM USER_TABLE WHERE USER_ID =%s", [userId])
             cursor.execute("DELETE FROM USER_TABLE WHERE CHILD_DEPENDENT_ID =%s", [userId])
 
         return JsonResponse({
@@ -115,33 +143,3 @@ def deleteUser(request):
             'STATUS': False,
             'RESPONSE_MESSAGE': ServerEnum.RESPONSE_DATABASE_CONNECTION_ERROR
         })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
