@@ -11,7 +11,7 @@ from general.constants import ServerEnum
 from models.user import User
 
 
-def database_commit(request):
+def database_commit():
     create_user_table()
     return JsonResponse({
         'STATUS': True,

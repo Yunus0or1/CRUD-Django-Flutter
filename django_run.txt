@@ -1,0 +1,2 @@
+cd D:\CRUD-Django-Flutter\crud_django
+python manage.py runserver 192.168.0.5:8588

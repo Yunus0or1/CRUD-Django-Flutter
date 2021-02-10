@@ -11,6 +11,9 @@ class ServerConfig {
 
   static final String environmentMode = getEnvironment();
 
-  static final String SERVER_HOST = 'http://pharmacy.arbreesolutions.com:';
-  static final String SERVER_PORT = "80";
+  static final String SERVER_HOST = (getEnvironment() == "dev")
+      ? 'http://192.168.0.5:'
+      : 'http://118.179.207.186:';
+  static final String SERVER_PORT =
+      (getEnvironment() == "dev") ? '8588' : '8588';
 }

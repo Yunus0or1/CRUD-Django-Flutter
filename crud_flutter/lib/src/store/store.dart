@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:crud_flutter/src/models/states/app_state.dart';
 import 'package:crud_flutter/src/models/user/user.dart';
+import 'package:crud_flutter/src/util/util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Store {
@@ -44,10 +45,8 @@ class Store {
     _appState = new AppState();
   }
 
-
-
-  Future updateUserId(String userUUID) async {
-    appState.userUUID = userUUID;
+  Future createUserUUID() async {
+    appState.userUUID =  Util.createUUID();
     await putAppData();
   }
 

@@ -22,6 +22,67 @@ class UserRepo {
 
   static UserRepo get instance => _instance;
 
+  Future<Tuple2<void, String>> addEditUser(
+      {User user, String childDependentId, String addEditMethod}) async {
+    int retry = 0;
+    while (retry++ < 2) {
+      try {
+        final String jwtToken = Store.instance.appState.jwtToken;
+        final String userUUID = Store.instance.appState.userUUID;
+
+        String addressDetails;
+        if (user.userType == AppEnum.USER_TYPE_CHILD) {
+          addressDetails = null;
+        } else {
+          addressDetails = user.addressDetails.toJsonEncodedString();
+        }
+
+        final String addEditUserRequest = jsonEncode(<String, dynamic>{
+          'INSERT_BY_USER_ID': userUUID,
+          'FIRST_NAME': user.firstName,
+          'LAST_NAME': user.lastName,
+          'CHILD_DEPENDENT_ID': childDependentId,
+          'ADDRESS': addressDetails,
+          'USER_TYPE': user.userType,
+          'METHOD': addEditMethod,
+        });
+
+        final addEditUserResponse = await UserRepo.instance
+            .getUserClient()
+            .addEditUser(jwtToken, addEditUserRequest);
+
+        return Tuple2(null, ClientEnum.RESPONSE_SUCCESS);
+      } catch (err) {
+        print("Error in addEditUser() in UserRepo");
+        print(err);
+      }
+    }
+    return Tuple2(null, ClientEnum.RESPONSE_CONNECTION_ERROR);
+  }
+
+  Future<Tuple2<void, String>> deleteUser({String userId}) async {
+    int retry = 0;
+    while (retry++ < 2) {
+      try {
+        final String jwtToken = Store.instance.appState.jwtToken;
+
+        final String deleteUserRequest = jsonEncode(<String, dynamic>{
+          'USER_ID': userId,
+        });
+
+        final deleteUserResponse = await UserRepo.instance
+            .getUserClient()
+            .deleteUser(jwtToken, deleteUserRequest);
+
+        return Tuple2(null, ClientEnum.RESPONSE_SUCCESS);
+      } catch (err) {
+        print("Error in addEditUser() in UserRepo");
+        print(err);
+      }
+    }
+    return Tuple2(null, ClientEnum.RESPONSE_CONNECTION_ERROR);
+  }
+
   Future<Tuple2<FeedResponse, String>> getUserListFeedData(
       FeedRequest feedRequest) async {
     int retry = 0;
@@ -30,26 +91,34 @@ class UserRepo {
         final String jwtToken = Store.instance.appState.jwtToken;
         final String userId = Store.instance.appState.userUUID;
 
+        final String getUserListFeedDataRequest = jsonEncode(<String, dynamic>{
+          'INSERT_BY_USER_ID': userId,
+        });
+
         final feedResponse = await UserRepo.instance
             .getUserClient()
-            .getUserListFeed(jwtToken, userId);
+            .getUserListFeed(jwtToken, getUserListFeedDataRequest);
 
-        final List<User> allUserList = List<dynamic>.from(
-                feedResponse.map((singleUser) => User.fromJson(singleUser)))
-            .cast<User>();
+        if (feedResponse['STATUS'] == true) {
+          final List<User> allUserList = List<dynamic>.from(json
+              .decode(feedResponse['USER_LIST'])
+              .map((singleUser) => User.fromJson(singleUser))).cast<User>();
 
-        final userFeedResponse = FeedResponse()
-          ..status = true
-          ..lastFeed = false
-          ..feedItems = allUserList
-              .map((singleUser) => FeedItem()
-                ..user = singleUser
-                ..viewCardType = AppEnum.FEED_USER)
-              .toList()
-          ..response = ClientEnum.RESPONSE_SUCCESS
-          ..error = false;
+          final userFeedResponse = FeedResponse()
+            ..status = true
+            ..lastFeed = false
+            ..feedItems = allUserList
+                .map((singleUser) => FeedItem()
+                  ..user = singleUser
+                  ..viewCardType = AppEnum.FEED_USER)
+                .toList()
+            ..response = ClientEnum.RESPONSE_SUCCESS
+            ..error = false;
 
-        return Tuple2(userFeedResponse, ClientEnum.RESPONSE_SUCCESS);
+          return Tuple2(userFeedResponse, ClientEnum.RESPONSE_SUCCESS);
+        }else {
+          return Tuple2(null, feedResponse['RESPONSE_MESSAGE']);
+        }
       } catch (err) {
         print("Error in getUserListFeedData() in UserRepo");
         print(err);
@@ -83,6 +152,9 @@ class UserRepo {
 
   Future<Tuple2<FeedResponse, String>> getFeed(FeedRequest feedRequest) async {
     if (feedRequest.feedInfo.feedType == AppEnum.FEED_USER)
+      return getUserListFeedData(feedRequest);
+    // Dummy Response Send
+    else if (feedRequest.feedInfo.feedType == AppEnum.FEED_USER)
       return Tuple2(
           FeedResponse(status: true, feedItems: [
             FeedItem(
@@ -107,8 +179,6 @@ class UserRepo {
                   ..addressDetails = null)
           ]),
           ClientEnum.RESPONSE_SUCCESS);
-    if (feedRequest.feedInfo.feedType == AppEnum.FEED_USER)
-      return getUserListFeedData(feedRequest);
 
     return null;
   }

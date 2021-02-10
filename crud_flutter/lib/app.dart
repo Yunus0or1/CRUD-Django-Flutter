@@ -22,6 +22,7 @@ class _AppSate extends State<App> {
 
   void initProject() async {
     await Store.initStore();
+    Store.instance.createUserUUID();
   }
 
   @override

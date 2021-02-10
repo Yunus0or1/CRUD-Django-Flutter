@@ -26,10 +26,6 @@ class Util {
     }
   }
 
-  static String getStaticImageURL() {
-    return "https://firebasestorage.googleapis.com/v0/b/pharmacy-project-419ca.appspot.com/o/static%2Fdefault.jpg?alt=media&token=9d286a17-2bdf-4a28-8a6b-15ac30c26c09";
-  }
-
   static showSnackBar(
       {GlobalKey<ScaffoldState> scaffoldKey, String message, int duration}) {
     scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -41,6 +37,10 @@ class Util {
   static Color colorFromHex(String hexColor) {
     final hexCode = hexColor.replaceAll('#', '');
     return Color(int.parse('FF$hexCode', radix: 16));
+  }
+
+  static String createUUID(){
+    return  Uuid().v1();
   }
 
   static Color greenishColor() {
@@ -61,11 +61,6 @@ class Util {
     return Color(int.parse('FF$hexCode', radix: 16));
   }
 
-  static Future<void> getPermissions() async {
-    await Permission.camera.request();
-    await Permission.storage.request();
-    await Permission.mediaLibrary.request();
-  }
 
   static Future<void> handleErrorResponse(
       {String errorResponseCode,

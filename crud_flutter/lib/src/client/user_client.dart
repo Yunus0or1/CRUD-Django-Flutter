@@ -8,30 +8,64 @@ class UserClient {
     print("UserClient Initialized");
   }
 
-  Future<dynamic> getUserListFeed(String jwtToken, String userId) async {
-    final http.Response response = await http.get(
+  Future<dynamic> addEditUser(String jwtToken, String addEditUserRequest) async {
+    final http.Response response = await http.post(
       ServerConfig.SERVER_HOST +
           ServerConfig.SERVER_PORT.toString() +
-          '/api/appapi/request-list/${userId}/',
+          '/add_edit_user/',
       headers: {
         'token': jwtToken,
         'Content-Type': 'application/json; charset=UTF-8',
       },
+      body: addEditUserRequest
     ).timeout(Duration(seconds: 300));
 
     final jsonResponse = json.decode(response.body);
     return jsonResponse;
   }
 
-  Future<dynamic> getParentList(String jwtToken, String userId) async {
-    final http.Response response = await http.get(
+  Future<dynamic> deleteUser(String jwtToken, String deleteUserRequest) async {
+    final http.Response response = await http.post(
+        ServerConfig.SERVER_HOST +
+            ServerConfig.SERVER_PORT.toString() +
+            '/delete_user/',
+        headers: {
+          'token': jwtToken,
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: deleteUserRequest
+    ).timeout(Duration(seconds: 300));
+
+    final jsonResponse = json.decode(response.body);
+    return jsonResponse;
+  }
+
+  Future<dynamic> getUserListFeed(String jwtToken, String getUserListRequest) async {
+    final http.Response response = await http.post(
       ServerConfig.SERVER_HOST +
-          ServerConfig.SERVER_PORT.toString() +
-          '/api/appapi/request-list/${userId}/',
+          ServerConfig.SERVER_PORT+
+          '/get_user_list/',
       headers: {
         'token': jwtToken,
         'Content-Type': 'application/json; charset=UTF-8',
       },
+      body: getUserListRequest
+    ).timeout(Duration(seconds: 300));
+
+    final jsonResponse = json.decode(response.body);
+    return jsonResponse;
+  }
+
+  Future<dynamic> getParentList(String jwtToken, String getParentUserListRequest) async {
+    final http.Response response = await http.post(
+      ServerConfig.SERVER_HOST +
+          ServerConfig.SERVER_PORT.toString() +
+          '/get_parent_user_list/',
+      headers: {
+        'token': jwtToken,
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: getParentUserListRequest
     ).timeout(Duration(seconds: 300));
 
     final jsonResponse = json.decode(response.body);

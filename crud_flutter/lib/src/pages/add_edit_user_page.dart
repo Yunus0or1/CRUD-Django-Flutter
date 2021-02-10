@@ -1,5 +1,6 @@
 import 'package:crud_flutter/src/component/general/loading_widget.dart';
 import 'package:crud_flutter/src/models/general/App_Enum.dart';
+import 'package:crud_flutter/src/models/general/drop_down_item.dart';
 import 'package:crud_flutter/src/util/util.dart';
 import 'package:flutter/material.dart';
 import 'package:crud_flutter/src/models/user/user.dart';
@@ -7,8 +8,10 @@ import 'package:crud_flutter/src/models/user/user.dart';
 class AddEditUserPage extends StatefulWidget {
   final User user;
   final bool userAdd;
+  final List<User> parentUserList;
 
-  const AddEditUserPage({Key key, this.user, this.userAdd}) : super(key: key);
+  const AddEditUserPage({Key key, this.user, this.userAdd, this.parentUserList})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => new AddEditUserPageState();
@@ -23,6 +26,8 @@ class AddEditUserPageState extends State<AddEditUserPage> {
   TextEditingController cityNameController;
   TextEditingController stateNameController;
   TextEditingController zipNumberController;
+
+  User selectedParentForChild;
 
   bool isProcessing = false;
 
@@ -40,6 +45,7 @@ class AddEditUserPageState extends State<AddEditUserPage> {
         new TextEditingController(text: widget.user.addressDetails?.state);
     zipNumberController =
         new TextEditingController(text: widget.user.addressDetails?.zip);
+    selectedParentForChild = widget.parentUserList[0];
   }
 
   void refreshUI() {
@@ -171,6 +177,25 @@ class AddEditUserPageState extends State<AddEditUserPage> {
         ],
       ),
     );
+  }
+
+  Widget buildParentDropDownMenu() {
+    return Container(
+      height: 50,
+      padding: EdgeInsets.fromLTRB(30, 10, 30, 5),
+      child: DropDownItem(
+        dropDownList: widget.parentUserList,
+        selectedItem: selectedParentForChild,
+        setSelectedItem: setParentForChild,
+        callBackRefreshUI: refreshUI,
+        dropDownTextColor: Colors.white,
+        dropDownContainerColor: Util.greenishColor(),
+      ),
+    );
+  }
+
+  void setParentForChild(dynamic value) {
+    selectedParentForChild = value;
   }
 
   void submitData() async {}
