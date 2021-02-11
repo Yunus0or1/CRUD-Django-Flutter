@@ -3,7 +3,7 @@ import 'package:crud_flutter/src/component/buttons/general_action_round_button.d
 import 'package:crud_flutter/src/component/general/loading_widget.dart';
 import 'package:crud_flutter/src/models/general/App_Enum.dart';
 import 'package:crud_flutter/src/models/general/Enum_Data.dart';
-import 'package:crud_flutter/src/models/general/drop_down_item.dart';
+import 'package:crud_flutter/src/component/general/drop_down_item.dart';
 import 'package:crud_flutter/src/models/states/event.dart';
 import 'package:crud_flutter/src/models/user/address_details.dart';
 import 'package:crud_flutter/src/repo/user_repo.dart';
@@ -36,7 +36,8 @@ class AddEditUserPageState extends State<AddEditUserPage> {
   TextEditingController stateNameController;
   TextEditingController zipNumberController;
 
-  User selectedParentForChild;
+  List<String> parentNameList = [];
+  String selectedParentForChild;
 
   bool isProcessing = false;
 
@@ -56,8 +57,15 @@ class AddEditUserPageState extends State<AddEditUserPage> {
         new TextEditingController(text: widget.user.address?.zip);
 
     if (widget.parentUserList != null) {
-      widget.parentUserList.insert(0, User()..firstName = 'SELECT A PARENT');
-      selectedParentForChild = widget.parentUserList[0];
+      parentNameList.add('SELECT A PARENT');
+      // Appending Name And First 8 character of the ID, so no duplicate value should be in dropdown
+      widget.parentUserList.forEach((singleParent) {
+        parentNameList.add(singleParent.firstName +
+            ' (' +
+            singleParent.userId.split('_')[1] +
+            ')');
+      });
+      selectedParentForChild = parentNameList[0];
     }
   }
 
@@ -74,7 +82,7 @@ class AddEditUserPageState extends State<AddEditUserPage> {
           elevation: 1,
           centerTitle: true,
           title: Text(
-            'USER FORM',
+            'USER (${widget.user.userType}) FORM',
             style: TextStyle(
                 color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),
           ),
@@ -149,6 +157,10 @@ class AddEditUserPageState extends State<AddEditUserPage> {
           textEditingController: zipNumberController));
     }
 
+    if (widget.user.userType == AppEnum.USER_TYPE_CHILD) {
+      children.add(buildParentDropDownMenu());
+    }
+
     children.add(
       GeneralActionRoundButton(
         title: "Submit",
@@ -204,14 +216,14 @@ class AddEditUserPageState extends State<AddEditUserPage> {
   Widget buildParentDropDownMenu() {
     return Container(
       height: 50,
-      padding: EdgeInsets.fromLTRB(30, 10, 30, 5),
+      padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
       child: DropDownItem(
-        dropDownList: widget.parentUserList,
+        dropDownList: parentNameList,
         selectedItem: selectedParentForChild,
         setSelectedItem: setParentForChild,
         callBackRefreshUI: refreshUI,
-        dropDownTextColor: Colors.white,
-        dropDownContainerColor: Util.greenishColor(),
+        dropDownTextColor: Colors.black,
+        dropDownContainerColor: Colors.white,
       ),
     );
   }
@@ -242,11 +254,12 @@ class AddEditUserPageState extends State<AddEditUserPage> {
       }
     }
     if (widget.user.userType == AppEnum.USER_TYPE_CHILD) {
-      if (selectedParentForChild.firstName == 'SELECT A PARENT') {
+      if (selectedParentForChild == 'SELECT A PARENT') {
         Util.showSnackBar(
             scaffoldKey: _scaffoldKey,
             message: "Select a parent for the child",
             duration: 1500);
+        return;
       }
     }
 
@@ -255,13 +268,26 @@ class AddEditUserPageState extends State<AddEditUserPage> {
           scaffoldKey: _scaffoldKey,
           message: "Please add a proper first name",
           duration: 1500);
+      return;
     }
 
     AddressDetails addressDetails;
     String childDependentId;
     if (widget.user.userType == AppEnum.USER_TYPE_CHILD) {
       addressDetails = null;
-      childDependentId = selectedParentForChild.userId;
+      // Setting childDependentId of Parent
+      final start = '(';
+      final end = ')';
+
+      final startIndex = selectedParentForChild.indexOf(start);
+      final endIndex = selectedParentForChild.indexOf(end);
+      final childDependentSubId = selectedParentForChild
+          .substring(startIndex + start.length, endIndex)
+          .trim();
+
+      childDependentId = widget.parentUserList
+          .firstWhere((element) => element.userId.contains(childDependentSubId))
+          .userId;
     } else if (widget.user.userType == AppEnum.USER_TYPE_PARENT) {
       {
         addressDetails = AddressDetails()
@@ -272,6 +298,7 @@ class AddEditUserPageState extends State<AddEditUserPage> {
         childDependentId = null;
       }
     }
+
 
     User user = new User()
       ..insertByUserId = Store.instance.appState.userUUID

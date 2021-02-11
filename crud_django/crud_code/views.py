@@ -151,8 +151,9 @@ def getParenUserList(request):
         requestBody = util.decodeJson(request.body)
         insertByUserId = requestBody['INSERT_BY_USER_ID']
 
+
         databaseResultUserListData = util.executesql(
-            query="SELECT * FROM USER_TABLE WHERE INSERT_BY_USER_ID = %s AND USER_ID = %s",
+            query="SELECT * FROM USER_TABLE WHERE INSERT_BY_USER_ID = %s AND USER_TYPE = %s",
             datatuple=[insertByUserId, ServerEnum.USER_PARENT])
 
         userListData = User.toJsonStringListFromDatabase(databaseResultUserListData)

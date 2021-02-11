@@ -124,6 +124,7 @@ class _HomePageState extends State<HomePage> {
               builder: (context) => AddEditUserPage(
                     user: User()..userType = AppEnum.USER_TYPE_CHILD,
                     addEditMethod: AppEnum.METHOD_INSERT,
+                    parentUserList: parentUserList,
                   )),
         );
       } else {

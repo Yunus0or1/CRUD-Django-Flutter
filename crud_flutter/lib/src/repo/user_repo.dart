@@ -41,7 +41,6 @@ class UserRepo {
           'METHOD': addEditMethod,
         });
 
-
         final addEditUserResponse = await UserRepo.instance
             .getUserClient()
             .addEditUser(jwtToken, addEditUserRequest);
@@ -137,14 +136,19 @@ class UserRepo {
     while (retry++ < 2) {
       try {
         final String jwtToken = Store.instance.appState.jwtToken;
-        final String userId = Store.instance.appState.userUUID;
+        final String userUUID = Store.instance.appState.userUUID;
+
+        final String getParentListRequest = jsonEncode(<String, dynamic>{
+          'INSERT_BY_USER_ID': userUUID,
+        });
 
         final parentListResponse = await UserRepo.instance
             .getUserClient()
-            .getParentList(jwtToken, userId);
+            .getParentList(jwtToken, getParentListRequest);
 
         if (parentListResponse['STATUS'] == true) {
-          final List<User> allUserList = List<dynamic>.from(parentListResponse
+          final List<User> allUserList = List<dynamic>.from(json
+              .decode(parentListResponse['USER_LIST'])
               .map((singleUser) => User.fromJson(singleUser))).cast<User>();
 
           return Tuple2(allUserList, ClientEnum.RESPONSE_SUCCESS);
