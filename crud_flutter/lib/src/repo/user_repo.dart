@@ -36,7 +36,9 @@ class UserRepo {
           'FIRST_NAME': user.firstName,
           'LAST_NAME': user.lastName,
           'CHILD_DEPENDENT_ID': user.childDependentId,
-          'ADDRESS': user.address.toJsonEncodedString(),
+          'ADDRESS': (user.address == null)
+              ? null
+              : user.address.toJsonEncodedString(),
           'USER_TYPE': user.userType,
           'METHOD': addEditMethod,
         });

@@ -56,15 +56,44 @@ class UserListCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => AddEditUserPage(
-                            user: user,
-                            addEditMethod: AppEnum.METHOD_UPDATE,
-                          )),
-                );
+              onTap: () async {
+                if (user.userType == AppEnum.USER_TYPE_PARENT)
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddEditUserPage(
+                              user: user,
+                              addEditMethod: AppEnum.METHOD_UPDATE,
+                            )),
+                  );
+
+                if (user.userType == AppEnum.USER_TYPE_CHILD) {
+                  Util.showSnackBar(
+                      scaffoldKey: UIState.instance.scaffoldKey,
+                      message: "Please wait",
+                      duration: 1000);
+                  Tuple2<List<User>, String> parentListResponse =
+                      await UserRepo.instance.getParentList();
+
+                  final List<User> parentUserList = parentListResponse.item1;
+                  final responseCode = parentListResponse.item2;
+
+                  if (responseCode == ClientEnum.RESPONSE_SUCCESS) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddEditUserPage(
+                                user: user,
+                                addEditMethod: AppEnum.METHOD_UPDATE,
+                                parentUserList: parentUserList,
+                              )),
+                    );
+                  } else {
+                    Util.showSnackBar(
+                        scaffoldKey: UIState.instance.scaffoldKey,
+                        message: "Something went wrong. Please try again.");
+                  }
+                }
               },
               child: Container(
                 width: 30,
@@ -95,9 +124,9 @@ class UserListCard extends StatelessWidget {
               onTap: () {
                 showAlertDialog(
                     context: context,
-                    height: 150,
+                    height: 180,
                     message: (user.userType == AppEnum.USER_TYPE_PARENT)
-                        ? "Are you sure to remove this Parent? All children will be removed automatically."
+                        ? "Are you sure to remove this Parent? All children of this parent will be removed automatically."
                         : "Are you sure to remove this child?",
                     acceptFunc: deleteUser);
               },
@@ -112,7 +141,7 @@ class UserListCard extends StatelessWidget {
     );
   }
 
-  void deleteUser() async{
+  void deleteUser() async {
     Tuple2<void, String> deleteUserResponse =
         await UserRepo.instance.deleteUser(userId: user.userId);
 
@@ -120,7 +149,8 @@ class UserListCard extends StatelessWidget {
 
     if (responseCode == ClientEnum.RESPONSE_SUCCESS) {
       Util.showSnackBar(
-          scaffoldKey: UIState.instance.scaffoldKey, message: "Removed User successfully");
+          scaffoldKey: UIState.instance.scaffoldKey,
+          message: "Removed User successfully");
       Streamer.putEventStream(Event(EventType.REFRESH_USER_LIST_PAGE));
     } else {
       Util.showSnackBar(

@@ -66,6 +66,20 @@ class AddEditUserPageState extends State<AddEditUserPage> {
             ')');
       });
       selectedParentForChild = parentNameList[0];
+      if (widget.user.childDependentId != null) {
+        final String parentFirstName = widget.parentUserList
+            .firstWhere(
+                (element) => element.userId == widget.user.childDependentId)
+            .firstName;
+        final String childDependentSubId = widget.parentUserList
+            .firstWhere(
+                (element) => element.userId == widget.user.childDependentId)
+            .userId
+            .split('_')[1];
+
+        selectedParentForChild =
+            parentFirstName + ' (' + childDependentSubId + ')';
+      }
     }
   }
 
@@ -215,15 +229,26 @@ class AddEditUserPageState extends State<AddEditUserPage> {
 
   Widget buildParentDropDownMenu() {
     return Container(
-      height: 50,
       padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
-      child: DropDownItem(
-        dropDownList: parentNameList,
-        selectedItem: selectedParentForChild,
-        setSelectedItem: setParentForChild,
-        callBackRefreshUI: refreshUI,
-        dropDownTextColor: Colors.black,
-        dropDownContainerColor: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            'PARENT',
+            style: TextStyle(
+                color: Util.purplishColor(), fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 3),
+          DropDownItem(
+            dropDownList: parentNameList,
+            selectedItem: selectedParentForChild,
+            setSelectedItem: setParentForChild,
+            callBackRefreshUI: refreshUI,
+            dropDownTextColor: Colors.black,
+            dropDownContainerColor: Colors.white,
+          )
+        ],
       ),
     );
   }
@@ -298,7 +323,6 @@ class AddEditUserPageState extends State<AddEditUserPage> {
         childDependentId = null;
       }
     }
-
 
     User user = new User()
       ..insertByUserId = Store.instance.appState.userUUID
