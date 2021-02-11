@@ -179,7 +179,7 @@ class AddEditUserPageState extends State<AddEditUserPage> {
       GeneralActionRoundButton(
         title: "Submit",
         textColor: Colors.white,
-        isProcessing: false,
+        isProcessing: isProcessing,
         callBackOnSubmit: submitData,
       ),
     );
@@ -296,6 +296,9 @@ class AddEditUserPageState extends State<AddEditUserPage> {
       return;
     }
 
+    isProcessing = true;
+    refreshUI();
+
     AddressDetails addressDetails;
     String childDependentId;
     if (widget.user.userType == AppEnum.USER_TYPE_CHILD) {
@@ -358,5 +361,8 @@ class AddEditUserPageState extends State<AddEditUserPage> {
           scaffoldKey: _scaffoldKey,
           message: "Something went wrong. Please try again.");
     }
+    isProcessing = false;
+    refreshUI();
   }
+
 }
