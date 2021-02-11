@@ -14,3 +14,14 @@ Create an APP that stores user data
    ```
 ## Backend System
  - Install Django reading this [link](https://github.com/Yunus0or1/Guidelines-How_TO/blob/master/Django%20Basic%20Installation.md)
+ - MySQL database is used
+ - Go to crud_django/crud_django/urls.py to find out all API end point
+ - All APIs end point execution resource can be found in crud_django/crud_code/views.py
+ - When the server is loaded for the first time, database commit is executed once which can be found crud_django/crud_django/urls.py last lines
+
+## Frontend System
+ - Install Flutter reading this [link](https://github.com/Yunus0or1/Guidelines-How_TO/blob/master/Flutter%20Guidelines.md)
+ - Visit lib/src/pages and lib/router.dart to find out all the related codes.
+
+
+/*To be noted, if a parent is deleted all the corresponding childred will be deleted automatically*/
