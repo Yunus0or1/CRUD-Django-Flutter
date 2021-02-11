@@ -13,4 +13,4 @@ Create an APP that stores user data
    Front end is developed in Flutter, Backend APIs are developed in Python-Django
    ```
 ## Backend System
- - Install Django reading this [link](!https://github.com/Yunus0or1/Guidelines-How_TO/blob/master/Django%20Basic%20Installation.md)
+ - Install Django reading this [link](https://github.com/Yunus0or1/Guidelines-How_TO/blob/master/Django%20Basic%20Installation.md)
