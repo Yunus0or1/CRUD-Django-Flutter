@@ -22,6 +22,8 @@ Create an APP that stores user data
 ## Frontend System
  - Install Flutter reading this [link](https://github.com/Yunus0or1/Guidelines-How_TO/blob/master/Flutter%20Guidelines.md)
  - Visit lib/src/pages and lib/router.dart to find out all the related codes.
+ - When the app is installed, a new UUID is generated for that user. All insertion and updated are happened using that UUID.
+ - lib/src/repo is responsible for business logic part. It has reactive approach. 
 
 
 **To be noted, if a parent is deleted all the corresponding childred will be deleted automatically**
