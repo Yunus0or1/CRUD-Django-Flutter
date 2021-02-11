@@ -67,6 +67,7 @@ class AddEditUserPageState extends State<AddEditUserPage> {
       });
       selectedParentForChild = parentNameList[0];
       if (widget.user.childDependentId != null) {
+        // So it means the child user is in edit system. so loading his actualy Parent name
         final String parentFirstName = widget.parentUserList
             .firstWhere(
                 (element) => element.userId == widget.user.childDependentId)
@@ -75,7 +76,7 @@ class AddEditUserPageState extends State<AddEditUserPage> {
             .firstWhere(
                 (element) => element.userId == widget.user.childDependentId)
             .userId
-            .split('_')[1];
+            .split('_')[1];// Split because the long ID contains _ So based on the split the first portion is taken
 
         selectedParentForChild =
             parentFirstName + ' (' + childDependentSubId + ')';
@@ -354,6 +355,7 @@ class AddEditUserPageState extends State<AddEditUserPage> {
       }
 
       await Future.delayed(Duration(seconds: 2));
+      // After add or edit refreshing the User list page to get latest data
       Streamer.putEventStream(Event(EventType.REFRESH_USER_LIST_PAGE));
       Navigator.of(context).pop();
     } else {

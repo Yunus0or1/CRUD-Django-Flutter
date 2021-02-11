@@ -4,6 +4,7 @@ import 'package:crud_flutter/src/models/user/user.dart';
 import 'package:crud_flutter/src/util/util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// This file is responsible for all storing data in SharedPreferences
 class Store {
   AppState _appState;
 

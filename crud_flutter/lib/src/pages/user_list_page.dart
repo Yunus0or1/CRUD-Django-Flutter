@@ -23,6 +23,8 @@ class _UserListPageState extends State<UserListPage> {
   }
 
   void eventChecker() async {
+    // This page is listening to stream. If any data changes, stream will be notified,
+    // So this page gets refreshed and loads latest data
     Streamer.getEventStream().listen((data) {
       if (data.eventType == EventType.REFRESH_USER_LIST_PAGE ||
           data.eventType == EventType.REFRESH_ALL_PAGES) {

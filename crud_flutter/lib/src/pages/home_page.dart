@@ -107,6 +107,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   navigateToAddEditChildUser() async {
+    // Without any parent there can not be any child.
+    // So if there is not parent, we are telling the user to add Parent first
     Util.showSnackBar(
         scaffoldKey: _scaffoldKey, message: "Please wait", duration: 1000);
     Tuple2<List<User>, String> parentListResponse =

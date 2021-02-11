@@ -11,6 +11,7 @@ import 'package:crud_flutter/src/store/store.dart';
 import 'package:tuple/tuple.dart';
 import 'dart:convert';
 
+// The business Login Class
 class UserRepo {
   static final UserRepo _instance = UserRepo();
   UserClient _userClient;
@@ -110,6 +111,7 @@ class UserRepo {
               .decode(feedResponse['USER_LIST'])
               .map((singleUser) => User.fromJson(singleUser))).cast<User>();
 
+          // Generic Feed System. This can accept any type of data.
           final userFeedResponse = FeedResponse()
             ..status = true
             ..lastFeed = false
