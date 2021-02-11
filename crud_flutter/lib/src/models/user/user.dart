@@ -29,7 +29,7 @@ class User {
       childDependentId: jsonData['CHILD_DEPENDENT_ID'],
       address: (jsonData['ADDRESS'] == null)
           ? null
-          : AddressDetails.fromJson(jsonData['ADDRESS']),
+          : AddressDetails.fromJson(json.decode(jsonData['ADDRESS'])),
       userType: jsonData['USER_TYPE'],
     );
   }

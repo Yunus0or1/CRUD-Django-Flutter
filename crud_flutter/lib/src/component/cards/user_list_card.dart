@@ -62,7 +62,7 @@ class UserListCard extends StatelessWidget {
                   MaterialPageRoute(
                       builder: (context) => AddEditUserPage(
                             user: user,
-                            userAdd: false,
+                            addEditMethod: AppEnum.METHOD_UPDATE,
                           )),
                 );
               },

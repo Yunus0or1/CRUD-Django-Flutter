@@ -43,7 +43,6 @@ class _HomePageState extends State<HomePage> {
           data.eventType == EventType.REFRESH_ALL_PAGES) {
         refreshUI();
       }
-
     });
   }
 
@@ -102,7 +101,7 @@ class _HomePageState extends State<HomePage> {
       MaterialPageRoute(
           builder: (context) => AddEditUserPage(
                 user: User()..userType = AppEnum.USER_TYPE_PARENT,
-                userAdd: true,
+                addEditMethod: AppEnum.METHOD_INSERT,
               )),
     );
   }
@@ -124,7 +123,7 @@ class _HomePageState extends State<HomePage> {
           MaterialPageRoute(
               builder: (context) => AddEditUserPage(
                     user: User()..userType = AppEnum.USER_TYPE_CHILD,
-                    userAdd: true,
+                    addEditMethod: AppEnum.METHOD_INSERT,
                   )),
         );
       } else {

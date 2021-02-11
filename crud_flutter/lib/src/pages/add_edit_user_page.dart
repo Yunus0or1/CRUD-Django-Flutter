@@ -15,10 +15,11 @@ import 'package:tuple/tuple.dart';
 
 class AddEditUserPage extends StatefulWidget {
   final User user;
-  final bool userAdd;
   final List<User> parentUserList;
+  final String addEditMethod;
 
-  const AddEditUserPage({Key key, this.user, this.userAdd, this.parentUserList})
+  const AddEditUserPage(
+      {Key key, this.user, this.parentUserList, this.addEditMethod})
       : super(key: key);
 
   @override
@@ -53,8 +54,11 @@ class AddEditUserPageState extends State<AddEditUserPage> {
         new TextEditingController(text: widget.user.address?.state);
     zipNumberController =
         new TextEditingController(text: widget.user.address?.zip);
-    widget.parentUserList.insert(0, User()..firstName = 'SELECT A PARENT');
-    selectedParentForChild = widget.parentUserList[0];
+
+    if (widget.parentUserList != null) {
+      widget.parentUserList.insert(0, User()..firstName = 'SELECT A PARENT');
+      selectedParentForChild = widget.parentUserList[0];
+    }
   }
 
   void refreshUI() {
@@ -277,15 +281,27 @@ class AddEditUserPageState extends State<AddEditUserPage> {
       ..address = addressDetails
       ..userType = widget.user.userType;
 
+    if (widget.addEditMethod == AppEnum.METHOD_UPDATE) {
+      user.userId = widget.user.userId;
+    }
+
     Tuple2<void, String> addEditUserResponse = await UserRepo.instance
-        .addEditUser(user: user, addEditMethod: AppEnum.METHOD_INSERT);
+        .addEditUser(user: user, addEditMethod: widget.addEditMethod);
 
     final responseCode = addEditUserResponse.item2;
 
     if (responseCode == ClientEnum.RESPONSE_SUCCESS) {
-      Util.showSnackBar(
-          scaffoldKey: _scaffoldKey, message: "Removed User successfully");
+      if (widget.addEditMethod == AppEnum.METHOD_INSERT) {
+        Util.showSnackBar(
+            scaffoldKey: _scaffoldKey, message: "Added User successfully");
+      } else if (widget.addEditMethod == AppEnum.METHOD_UPDATE) {
+        Util.showSnackBar(
+            scaffoldKey: _scaffoldKey, message: "Updated User successfully");
+      }
+
+      await Future.delayed(Duration(seconds: 2));
       Streamer.putEventStream(Event(EventType.REFRESH_USER_LIST_PAGE));
+      Navigator.of(context).pop();
     } else {
       Util.showSnackBar(
           scaffoldKey: _scaffoldKey,

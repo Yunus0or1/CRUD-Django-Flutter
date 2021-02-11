@@ -32,6 +32,7 @@ class UserRepo {
 
         final String addEditUserRequest = jsonEncode(<String, dynamic>{
           'INSERT_BY_USER_ID': user.insertByUserId,
+          'USER_ID': user.userId,
           'FIRST_NAME': user.firstName,
           'LAST_NAME': user.lastName,
           'CHILD_DEPENDENT_ID': user.childDependentId,
@@ -39,6 +40,7 @@ class UserRepo {
           'USER_TYPE': user.userType,
           'METHOD': addEditMethod,
         });
+
 
         final addEditUserResponse = await UserRepo.instance
             .getUserClient()
