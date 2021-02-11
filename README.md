@@ -18,6 +18,7 @@ Create an APP that stores user data
  - Go to crud_django/crud_django/urls.py to find out all API end point
  - All APIs end point execution resource can be found in crud_django/crud_code/views.py
  - When the server is loaded for the first time, database commit is executed once which can be found crud_django/crud_django/urls.py last lines
+ - Remeber to add 'crud_op' named database in MySQL before running the server using manage.py
 
 ## Frontend System
  - Install Flutter reading this [link](https://github.com/Yunus0or1/Guidelines-How_TO/blob/master/Flutter%20Guidelines.md)
