@@ -8,6 +8,8 @@ urlpatterns = [
     url(r'^get_user_list/', user_views.getUserList, name="get_user_list"),
     url(r'^delete_user/', user_views.deleteUser, name="delete_user"),
     url(r'^get_parent_user_list/', user_views.getParenUserList, name="get_parent_user_list"),
+    url(r'^delete_everything/', user_views.deleteEverything, name="delete_everything"),
+    url(r'^server/', user_views.server, name="server"),
 ]
 
 # First execution of Database commit. With Printing the response

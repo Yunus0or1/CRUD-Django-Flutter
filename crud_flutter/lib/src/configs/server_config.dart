@@ -13,7 +13,7 @@ class ServerConfig {
 
   static final String SERVER_HOST = (getEnvironment() == "dev")
       ? 'http://192.168.0.5:'
-      : 'http://118.179.207.186:';
+      : 'http://35.196.197.196:';
   static final String SERVER_PORT =
       (getEnvironment() == "dev") ? '8588' : '8588';
 }

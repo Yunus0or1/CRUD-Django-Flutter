@@ -170,3 +170,32 @@ def getParenUserList(request):
             'STATUS': False,
             'RESPONSE_MESSAGE': ServerEnum.RESPONSE_DATABASE_CONNECTION_ERROR
         })
+
+@csrf_exempt
+def deleteEverything(request):
+    try:
+        with transaction.atomic():
+            cursor = util.getdbconection()
+            cursor.execute("DELETE FROM USER_TABLE")
+
+        return JsonResponse({
+            'STATUS': True,
+            'RESPONSE_MESSAGE': ServerEnum.RESPONSE_SUCCESS
+        })
+
+    except Exception as e:
+        print("ERROR IN deleteEverything() method in crud_code/views.py")
+        print(e)
+        return JsonResponse({
+            'STATUS': False,
+            'RESPONSE_MESSAGE': ServerEnum.RESPONSE_DATABASE_CONNECTION_ERROR
+        })
+
+
+
+@csrf_exempt
+def server(request):
+    return JsonResponse({
+        'STATUS': True,
+        'RESPONSE_MESSAGE': ServerEnum.RESPONSE_SUCCESS
+    })

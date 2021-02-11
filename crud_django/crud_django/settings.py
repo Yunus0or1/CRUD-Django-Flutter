@@ -8,7 +8,7 @@ DEBUG = False
 PROD = False
 
 DEV_SERVER = ['118.179.207.186']
-PROD_SERVER = ['104.154.158.55']
+PROD_SERVER = ['35.196.197.196']
 ALLOWED_HOSTS = ['*']
 
 # Detecting if the server in dev or production mode

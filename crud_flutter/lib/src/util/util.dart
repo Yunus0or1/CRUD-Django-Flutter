@@ -79,6 +79,11 @@ class Util {
           scaffoldKey: scaffoldKey,
           message: "Something went wrong. Please try again.");
     }
+    else if (errorResponseCode != ClientEnum.RESPONSE_DATABASE_CONNECTION_ERROR) {
+      Util.showSnackBar(
+          scaffoldKey: scaffoldKey,
+          message: "Something went wrong. Please try again.");
+    }
     return;
   }
 
