@@ -23,26 +23,19 @@ class UserRepo {
   static UserRepo get instance => _instance;
 
   Future<Tuple2<void, String>> addEditUser(
-      {User user, String childDependentId, String addEditMethod}) async {
+      {User user, String addEditMethod}) async {
     int retry = 0;
     while (retry++ < 2) {
       try {
         final String jwtToken = Store.instance.appState.jwtToken;
         final String userUUID = Store.instance.appState.userUUID;
 
-        String addressDetails;
-        if (user.userType == AppEnum.USER_TYPE_CHILD) {
-          addressDetails = null;
-        } else {
-          addressDetails = user.address.toJsonEncodedString();
-        }
-
         final String addEditUserRequest = jsonEncode(<String, dynamic>{
-          'INSERT_BY_USER_ID': userUUID,
+          'INSERT_BY_USER_ID': user.insertByUserId,
           'FIRST_NAME': user.firstName,
           'LAST_NAME': user.lastName,
-          'CHILD_DEPENDENT_ID': childDependentId,
-          'ADDRESS': addressDetails,
+          'CHILD_DEPENDENT_ID': user.childDependentId,
+          'ADDRESS': user.address.toJsonEncodedString(),
           'USER_TYPE': user.userType,
           'METHOD': addEditMethod,
         });
@@ -51,7 +44,11 @@ class UserRepo {
             .getUserClient()
             .addEditUser(jwtToken, addEditUserRequest);
 
-        return Tuple2(null, ClientEnum.RESPONSE_SUCCESS);
+        if (addEditUserResponse['STATUS'] == true) {
+          return Tuple2(null, ClientEnum.RESPONSE_SUCCESS);
+        } else {
+          return Tuple2(null, addEditUserResponse['RESPONSE_MESSAGE']);
+        }
       } catch (err) {
         print("Error in addEditUser() in UserRepo");
         print(err);
@@ -73,6 +70,12 @@ class UserRepo {
         final deleteUserResponse = await UserRepo.instance
             .getUserClient()
             .deleteUser(jwtToken, deleteUserRequest);
+
+        if (deleteUserResponse['STATUS'] == true) {
+          return Tuple2(null, ClientEnum.RESPONSE_SUCCESS);
+        } else {
+          return Tuple2(null, deleteUserResponse['RESPONSE_MESSAGE']);
+        }
 
         return Tuple2(null, ClientEnum.RESPONSE_SUCCESS);
       } catch (err) {
@@ -138,10 +141,14 @@ class UserRepo {
             .getUserClient()
             .getParentList(jwtToken, userId);
 
-        final List<User> allUserList = List<dynamic>.from(parentListResponse
-            .map((singleUser) => User.fromJson(singleUser))).cast<User>();
+        if (parentListResponse['STATUS'] == true) {
+          final List<User> allUserList = List<dynamic>.from(parentListResponse
+              .map((singleUser) => User.fromJson(singleUser))).cast<User>();
 
-        return Tuple2(allUserList, ClientEnum.RESPONSE_SUCCESS);
+          return Tuple2(allUserList, ClientEnum.RESPONSE_SUCCESS);
+        } else {
+          return Tuple2([], parentListResponse['RESPONSE_MESSAGE']);
+        }
       } catch (err) {
         print("Error in getParentList() in UserRepo");
         print(err);

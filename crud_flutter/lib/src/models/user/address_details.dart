@@ -2,7 +2,7 @@ import 'dart:convert';
 
 class AddressDetails {
   String street;
-  String city; // Address Type: Home, Office
+  String city;
   String state;
   String zip;
 
@@ -10,19 +10,19 @@ class AddressDetails {
 
   factory AddressDetails.fromJson(Map<String, dynamic> jsonData) {
     return AddressDetails(
-      street: jsonData['street'],
-      city: jsonData['city'],
-      state: jsonData['state'],
-      zip: jsonData['zip'],
+      street: jsonData['STREET'],
+      city: jsonData['CITY'],
+      state: jsonData['STATE'],
+      zip: jsonData['ZIP'],
     );
   }
 
   String toJsonEncodedString() {
     return jsonEncode(<String, dynamic>{
-      'street': street,
-      'city': city,
-      'state': state,
-      'zip': zip,
+      'STREET': street,
+      'CITY': city,
+      'STATE': state,
+      'ZIP': zip,
     });
   }
 }

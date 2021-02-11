@@ -84,10 +84,10 @@ if DEBUG:
 
 if PROD:
     databaseName = 'crud_op'
-    databaseHost = '104.198.244.29'
+    databaseHost = 'Localhost'
     databasePort = 3306
     databaseUser = 'root'
-    databasePassword = 'TMM@ezee#1'
+    databasePassword = ''
 
 DATABASES = {
     'default': {

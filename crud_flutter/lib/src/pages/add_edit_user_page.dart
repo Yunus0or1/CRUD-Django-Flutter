@@ -1,9 +1,17 @@
+import 'package:crud_flutter/src/bloc/stream.dart';
+import 'package:crud_flutter/src/component/buttons/general_action_round_button.dart';
 import 'package:crud_flutter/src/component/general/loading_widget.dart';
 import 'package:crud_flutter/src/models/general/App_Enum.dart';
+import 'package:crud_flutter/src/models/general/Enum_Data.dart';
 import 'package:crud_flutter/src/models/general/drop_down_item.dart';
+import 'package:crud_flutter/src/models/states/event.dart';
+import 'package:crud_flutter/src/models/user/address_details.dart';
+import 'package:crud_flutter/src/repo/user_repo.dart';
+import 'package:crud_flutter/src/store/store.dart';
 import 'package:crud_flutter/src/util/util.dart';
 import 'package:flutter/material.dart';
 import 'package:crud_flutter/src/models/user/user.dart';
+import 'package:tuple/tuple.dart';
 
 class AddEditUserPage extends StatefulWidget {
   final User user;
@@ -45,6 +53,7 @@ class AddEditUserPageState extends State<AddEditUserPage> {
         new TextEditingController(text: widget.user.address?.state);
     zipNumberController =
         new TextEditingController(text: widget.user.address?.zip);
+    widget.parentUserList.insert(0, User()..firstName = 'SELECT A PARENT');
     selectedParentForChild = widget.parentUserList[0];
   }
 
@@ -136,6 +145,15 @@ class AddEditUserPageState extends State<AddEditUserPage> {
           textEditingController: zipNumberController));
     }
 
+    children.add(
+      GeneralActionRoundButton(
+        title: "Submit",
+        textColor: Colors.white,
+        isProcessing: false,
+        callBackOnSubmit: submitData,
+      ),
+    );
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -198,9 +216,80 @@ class AddEditUserPageState extends State<AddEditUserPage> {
     selectedParentForChild = value;
   }
 
-  void submitData() async {}
+  void submitData() async {
+    if (firstNameController.text.isEmpty || lastNameController.text.isEmpty) {
+      Util.showSnackBar(
+          scaffoldKey: _scaffoldKey,
+          message: "All fields are mandatory",
+          duration: 1500);
+      return;
+    }
 
-  String getHintText() {
-    return "Airways name, Gate No. Terminal No. etc.";
+    if (widget.user.userType == AppEnum.USER_TYPE_PARENT) {
+      if (streetNameController.text.isEmpty ||
+          cityNameController.text.isEmpty ||
+          stateNameController.text.isEmpty ||
+          zipNumberController.text.isEmpty) {
+        Util.showSnackBar(
+            scaffoldKey: _scaffoldKey,
+            message: "All fields are mandatory",
+            duration: 1500);
+        return;
+      }
+    }
+    if (widget.user.userType == AppEnum.USER_TYPE_CHILD) {
+      if (selectedParentForChild.firstName == 'SELECT A PARENT') {
+        Util.showSnackBar(
+            scaffoldKey: _scaffoldKey,
+            message: "Select a parent for the child",
+            duration: 1500);
+      }
+    }
+
+    if (firstNameController.text == 'SELECT A PARENT') {
+      Util.showSnackBar(
+          scaffoldKey: _scaffoldKey,
+          message: "Please add a proper first name",
+          duration: 1500);
+    }
+
+    AddressDetails addressDetails;
+    String childDependentId;
+    if (widget.user.userType == AppEnum.USER_TYPE_CHILD) {
+      addressDetails = null;
+      childDependentId = selectedParentForChild.userId;
+    } else if (widget.user.userType == AppEnum.USER_TYPE_PARENT) {
+      {
+        addressDetails = AddressDetails()
+          ..street = streetNameController.text
+          ..city = cityNameController.text
+          ..state = stateNameController.text
+          ..zip = zipNumberController.text;
+        childDependentId = null;
+      }
+    }
+
+    User user = new User()
+      ..insertByUserId = Store.instance.appState.userUUID
+      ..firstName = firstNameController.text
+      ..lastName = lastNameController.text
+      ..childDependentId = childDependentId
+      ..address = addressDetails
+      ..userType = widget.user.userType;
+
+    Tuple2<void, String> addEditUserResponse = await UserRepo.instance
+        .addEditUser(user: user, addEditMethod: AppEnum.METHOD_INSERT);
+
+    final responseCode = addEditUserResponse.item2;
+
+    if (responseCode == ClientEnum.RESPONSE_SUCCESS) {
+      Util.showSnackBar(
+          scaffoldKey: _scaffoldKey, message: "Removed User successfully");
+      Streamer.putEventStream(Event(EventType.REFRESH_USER_LIST_PAGE));
+    } else {
+      Util.showSnackBar(
+          scaffoldKey: _scaffoldKey,
+          message: "Something went wrong. Please try again.");
+    }
   }
 }

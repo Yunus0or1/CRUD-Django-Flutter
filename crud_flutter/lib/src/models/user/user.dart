@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:crud_flutter/src/models/user/address_details.dart';
 
 class User {
+  String insertByUserId;
   String userId;
   String firstName;
   String lastName;
@@ -10,6 +11,7 @@ class User {
   String userType;
 
   User({
+    this.insertByUserId,
     this.userId,
     this.firstName,
     this.lastName,
@@ -20,6 +22,7 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> jsonData) {
     return User(
+      insertByUserId: jsonData['INSERT_BY_USER_ID'],
       userId: jsonData['USER_ID'],
       firstName: jsonData['FIRST_NAME'],
       lastName: jsonData['LAST_NAME'],
@@ -31,16 +34,15 @@ class User {
     );
   }
 
-  String toJsonString() {
-    final data = Map<String, dynamic>();
-    data['USER_ID'] = userId;
-    data['FIRST_NAME'] = firstName;
-    data['LAST_NAME'] = lastName;
-    data['CHILD_DEPENDENT_ID'] = childDependentId;
-    data['ADDRESS'] =
-        (address == null) ? null : address.toJsonEncodedString();
-    data['USER_TYPE'] = userType;
-
-    return json.encode(data);
+  String toJsonEncodedString() {
+    return jsonEncode(<String, dynamic>{
+      'INSERT_BY_USER_ID': insertByUserId,
+      'USER_ID': userId,
+      'FIRST_NAME': firstName,
+      'LAST_NAME': lastName,
+      'CHILD_DEPENDENT_ID': childDependentId,
+      'ADDRESS': (address == null) ? null : address.toJsonEncodedString(),
+      'USER_TYPE': userType,
+    });
   }
 }
