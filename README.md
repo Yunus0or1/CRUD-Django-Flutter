@@ -24,4 +24,4 @@ Create an APP that stores user data
  - Visit lib/src/pages and lib/router.dart to find out all the related codes.
 
 
-/*To be noted, if a parent is deleted all the corresponding childred will be deleted automatically*/
+/* To be noted, if a parent is deleted all the corresponding childred will be deleted automatically */
