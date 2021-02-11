@@ -8,3 +8,7 @@ Create an APP that stores user data
 	Delete user data
 	Create user data
 	Update user data
+	
+   ```
+   Front end is developed in Flutter, Backend APIs are developed in Python-Django
+   ```
